@@ -7,6 +7,9 @@ param: KEY "=" value
 KEY: WORD
 value: WORD
      | INT
+     // | SIGNED_INT
+     // | FLOAT
+     // | SIGNED_FLOAT
      | CNAME
      | PATH
 PATH: /.+\/[^\/]+/
@@ -19,9 +22,15 @@ _NEWLINE: NEWLINE
 
 %import common.WORD
 %import common.CNAME
+%import common.NUMBER
 %import common.INT
+%import common.SIGNED_INT
+%import common.FLOAT
+%import common.SIGNED_FLOAT
 %import common.NEWLINE
 %import common.WS
 %import common.WS_INLINE
+%import common.CR
+%import common.LF
 %ignore WS
 %ignore COMMENT

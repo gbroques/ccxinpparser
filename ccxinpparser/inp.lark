@@ -1,6 +1,6 @@
 start: keyword_card+
      | // empty
-keyword_card: KEYWORD ("," param)*
+keyword_card: KEYWORD ("," param)* [_NEWLINE data_line*]
 KEYWORD: "*" WORD (WS_INLINE WORD)*
 param: KEY "=" value
      | KEY
@@ -11,7 +11,11 @@ value: WORD
      | PATH
 PATH: /.+\/[^\/]+/
 
+data_line: value
+
 COMMENT: "**" /.*/
+
+_NEWLINE: NEWLINE
 
 %import common.WORD
 %import common.CNAME

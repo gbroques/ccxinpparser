@@ -11,7 +11,7 @@ value: WORD
      | PATH
 PATH: /.+\/[^\/]+/
 
-SINGLE_LINE_COMMENT: "**" [/(^NEWLINE)+/]
+COMMENT: "**" /.*/
 
 %import common.WORD
 %import common.CNAME
@@ -20,4 +20,4 @@ SINGLE_LINE_COMMENT: "**" [/(^NEWLINE)+/]
 %import common.WS
 %import common.WS_INLINE
 %ignore WS
-%ignore SINGLE_LINE_COMMENT
+%ignore COMMENT

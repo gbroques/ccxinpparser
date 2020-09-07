@@ -17,6 +17,17 @@ class CommentTest(unittest.TestCase):
         self.assertEqual(tree.data, 'start')
         self.assertEqual(len(tree.children), 0)
 
+    def test_parse_inp_with_single_comment(self):
+        tree = parse_inp('** this is a comment')
+
+        self.assertEqual(tree.data, 'start')
+        self.assertEqual(len(tree.children), 0)
+
+    def test_parse_inp_with_multiple_comments(self):
+        tree = parse_inp('**IM a comment\r\n**  to Explain things.\n')
+
+        self.assertEqual(tree.data, 'start')
+        self.assertEqual(len(tree.children), 0)
 
 if __name__ == '__main__':
     unittest.main()

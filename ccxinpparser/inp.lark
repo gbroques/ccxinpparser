@@ -1,0 +1,10 @@
+start: single_line_comment+
+     | // empty
+
+// single line comment
+single_line_comment: "**" [COMMENT_TEXT]
+COMMENT_TEXT: /(^NEWLINE)+/
+
+%import common.NEWLINE
+%import common.WS
+%ignore WS

@@ -24,8 +24,8 @@ class ParseInpTest(unittest.TestCase):
 
     def test_parse_inp_with_single_data_line_and_element(self):
         contents = """
-        ** Defines an element set "E2" with one element, 1.
-        *ELSET,ELSET=E2
+        ** Defines an element set "E1" with one element, 1.
+        *ELSET,ELSET=E1
         1
         """
 
@@ -56,7 +56,7 @@ class ParseInpTest(unittest.TestCase):
 
         value_token = value.children[0]
         self.assertEqual(value_token.type, 'CNAME')
-        self.assertEqual(value_token.value, 'E2')
+        self.assertEqual(value_token.value, 'E1')
 
         data_line = keyword_card.children[2]
         self.assertEqual(data_line.data, 'data_line')
@@ -69,6 +69,51 @@ class ParseInpTest(unittest.TestCase):
         data_value_token = data_value.children[0]
         self.assertEqual(data_value_token.type, 'INT')
         self.assertEqual(data_value_token.value, '1')
+
+    def test_parse_inp_with_single_data_line_and_multiple_elements(self):
+        contents = """
+        ** Defines an element set "E1" with three elements: 1, 2, and 3.
+        *ELSET,ELSET=E1
+        1, 2, 3
+        """
+
+        tree = parse_inp(contents)
+
+        keyword_card = tree.children[0]
+
+        data_line = keyword_card.children[2]
+        self.assertEqual(data_line.data, 'data_line')
+        self.assertEqual(len(data_line.children), 3)
+
+        # element 1
+        element1 = data_line.children[0]
+        self.assertEqual(element1.data, 'value')
+        self.assertEqual(len(element1.children), 1)
+
+        element1_token = element1.children[0]
+        self.assertEqual(element1_token.type, 'INT')
+        self.assertEqual(element1_token.value, '1')
+        # ----------------------------------------------
+
+        # element 2
+        element2 = data_line.children[1]
+        self.assertEqual(element2.data, 'value')
+        self.assertEqual(len(element2.children), 1)
+
+        element2_token = element2.children[0]
+        self.assertEqual(element2_token.type, 'INT')
+        self.assertEqual(element2_token.value, '2')
+        # ----------------------------------------------
+
+        # element 3
+        element3 = data_line.children[2]
+        self.assertEqual(element3.data, 'value')
+        self.assertEqual(len(element3.children), 1)
+
+        element3_token = element3.children[0]
+        self.assertEqual(element3_token.type, 'INT')
+        self.assertEqual(element3_token.value, '3')
+        # ----------------------------------------------
 
 
 if __name__ == '__main__':

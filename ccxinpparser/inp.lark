@@ -11,7 +11,7 @@ value: WORD
      | PATH
 PATH: /.+\/[^\/]+/
 
-data_line: value
+data_line: value ("," value)*
 
 COMMENT: "**" /.*/
 

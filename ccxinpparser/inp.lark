@@ -1,5 +1,4 @@
 start: keyword_card+
-     | single_line_comment+
      | // empty
 keyword_card: KEYWORD ("," param)*
 KEYWORD: "*" WORD
@@ -9,11 +8,10 @@ KEY: WORD
 value: PATH
 PATH: /.+\/[^\/]+/
 
-// single line comment
-single_line_comment: "**" [COMMENT_TEXT]
-COMMENT_TEXT: /(^NEWLINE)+/
+SINGLE_LINE_COMMENT: "**" [/(^NEWLINE)+/]
 
 %import common.WORD
 %import common.NEWLINE
 %import common.WS
 %ignore WS
+%ignore SINGLE_LINE_COMMENT

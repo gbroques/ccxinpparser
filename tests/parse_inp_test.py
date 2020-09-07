@@ -35,32 +35,34 @@ class ParseInpTest(unittest.TestCase):
         self.assertEqual(tree.data, 'start')
         self.assertEqual(len(tree.children), 0)
 
-    def test_parse_inp_propagate_positions(self):
-        tree = parse_inp('**')
-
-        self.assertEqual(tree.children[0].meta.line, 1)
-        self.assertEqual(tree.children[0].meta.column, 1)
-        self.assertEqual(tree.children[0].meta.start_pos, 0)
-        self.assertEqual(tree.children[0].meta.end_line, 1)
-        self.assertEqual(tree.children[0].meta.end_column, 3)
-        self.assertEqual(tree.children[0].meta.end_pos, 2)
-
     def test_parse_inp_with_single_empty_comment(self):
         tree = parse_inp('**')
 
         self.assertEqual(tree.data, 'start')
-        self.assertEqual(len(tree.children), 1)
-        self.assertEqual(tree.children[0].data, 'single_line_comment')
+        self.assertEqual(len(tree.children), 0)
 
     def test_parse_inp_with_multiple_empty_comments(self):
         tree = parse_inp('**\r\n**\n')
 
         self.assertEqual(tree.data, 'start')
-        self.assertEqual(len(tree.children), 2)
-        self.assertEqual(tree.children[0].data, 'single_line_comment')
-        self.assertEqual(len(tree.children[0].children), 0)
-        self.assertEqual(tree.children[1].data, 'single_line_comment')
-        self.assertEqual(len(tree.children[1].children), 0)
+        self.assertEqual(len(tree.children), 0)
+
+    def test_parse_inp_propagate_positions(self):
+        contents = '*STEP'
+
+        tree = parse_inp(contents)
+
+        self.assertEqual(tree.data, 'start')
+        self.assertEqual(len(tree.children), 1)
+
+        keyword_card = tree.children[0]
+
+        self.assertEqual(keyword_card.meta.line, 1)
+        self.assertEqual(keyword_card.meta.column, 1)
+        self.assertEqual(keyword_card.meta.start_pos, 0)
+        self.assertEqual(keyword_card.meta.end_line, 1)
+        self.assertEqual(keyword_card.meta.end_column, 6)
+        self.assertEqual(keyword_card.meta.end_pos, 5)
 
     def test_parse_inp_with_single_keyword_line_without_params_or_data(self):
         contents = '*STEP'

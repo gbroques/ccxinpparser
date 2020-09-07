@@ -219,6 +219,64 @@ class ParseInpTest(unittest.TestCase):
         self.assertEqual(element18_token.value, '18')
         # ----------------------------------------------
 
+    def test_parse_inp_with_multiple_data_continuation_line(self):
+        contents = """
+        *ELEMENT,ELSET=Etest,TYPE=S4
+        1, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+           16,17,18,19,20
+        2, 10, 11, 12
+        3, 17, 22,
+           55, 100
+        ** random comment
+        """
+
+        tree = parse_inp(contents)
+
+        self.assertEqual(len(tree.children), 1)
+
+        keyword_card = tree.children[0]
+
+        self.assertEqual(len(keyword_card.children), 6)
+
+        # second data line assertions
+        second_data_line = keyword_card.children[4]
+        self.assertEqual(second_data_line.data, 'data_line')
+        self.assertEqual(len(second_data_line.children), 4)
+
+        # element number of second data line
+        element_number = second_data_line.children[0]
+        self.assertEqual(element_number.data, 'value')
+        self.assertEqual(len(element_number.children), 1)
+
+        element_number_token = element_number.children[0]
+        self.assertEqual(element_number_token.type, 'INT')
+        self.assertEqual(element_number_token.value, '2')
+        # ----------------------------------------------
+
+        # third data line assertions
+        third_data_line = keyword_card.children[5]
+        self.assertEqual(third_data_line.data, 'data_line')
+        self.assertEqual(len(third_data_line.children), 5)
+
+        # element 22
+        element22 = third_data_line.children[2]
+        self.assertEqual(element22.data, 'value')
+        self.assertEqual(len(element22.children), 1)
+
+        element22_token = element22.children[0]
+        self.assertEqual(element22_token.type, 'INT')
+        self.assertEqual(element22_token.value, '22')
+
+        # element 100
+        element100 = third_data_line.children[4]
+        self.assertEqual(element100.data, 'value')
+        self.assertEqual(len(element100.children), 1)
+
+        element100_token = element100.children[0]
+        self.assertEqual(element100_token.type, 'INT')
+        self.assertEqual(element100_token.value, '100')
+        # ---------------------------------------------
+
 
 if __name__ == '__main__':
     unittest.main()

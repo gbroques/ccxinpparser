@@ -79,7 +79,11 @@ class ParseInpTest(unittest.TestCase):
 
         tree = parse_inp(contents)
 
+        self.assertEqual(len(tree.children), 1)
+
         keyword_card = tree.children[0]
+
+        self.assertEqual(len(keyword_card.children), 3)
 
         data_line = keyword_card.children[2]
         self.assertEqual(data_line.data, 'data_line')
@@ -113,6 +117,56 @@ class ParseInpTest(unittest.TestCase):
         element3_token = element3.children[0]
         self.assertEqual(element3_token.type, 'INT')
         self.assertEqual(element3_token.value, '3')
+        # ----------------------------------------------
+
+    def test_parse_inp_with_multiple_data_lines(self):
+        contents = """
+        ** Defines an element set "E1" with three elements: 1, 2, and 3.
+        *ELSET,ELSET=E1
+        1, 2, 3
+        4, 5, 6
+        """
+
+        tree = parse_inp(contents)
+
+        self.assertEqual(len(tree.children), 1)
+
+        keyword_card = tree.children[0]
+
+        self.assertEqual(len(keyword_card.children), 4)
+
+        data_line = keyword_card.children[3]
+        self.assertEqual(data_line.data, 'data_line')
+        self.assertEqual(len(data_line.children), 3)
+
+        # element 4
+        element4 = data_line.children[0]
+        self.assertEqual(element4.data, 'value')
+        self.assertEqual(len(element4.children), 1)
+
+        element4_token = element4.children[0]
+        self.assertEqual(element4_token.type, 'INT')
+        self.assertEqual(element4_token.value, '4')
+        # ----------------------------------------------
+
+        # element 5
+        element5 = data_line.children[1]
+        self.assertEqual(element5.data, 'value')
+        self.assertEqual(len(element5.children), 1)
+
+        element5_token = element5.children[0]
+        self.assertEqual(element5_token.type, 'INT')
+        self.assertEqual(element5_token.value, '5')
+        # ----------------------------------------------
+
+        # element 6
+        element6 = data_line.children[2]
+        self.assertEqual(element6.data, 'value')
+        self.assertEqual(len(element6.children), 1)
+
+        element6_token = element6.children[0]
+        self.assertEqual(element6_token.type, 'INT')
+        self.assertEqual(element6_token.value, '6')
         # ----------------------------------------------
 
 

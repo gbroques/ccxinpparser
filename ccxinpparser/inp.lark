@@ -1,17 +1,23 @@
 start: keyword_card+
      | // empty
 keyword_card: KEYWORD ("," param)*
-KEYWORD: "*" WORD
+KEYWORD: "*" WORD (WS_INLINE WORD)*
 param: KEY "=" value
      | KEY
 KEY: WORD
-value: PATH
+value: WORD
+     | INT
+     | CNAME
+     | PATH
 PATH: /.+\/[^\/]+/
 
 SINGLE_LINE_COMMENT: "**" [/(^NEWLINE)+/]
 
 %import common.WORD
+%import common.CNAME
+%import common.INT
 %import common.NEWLINE
 %import common.WS
+%import common.WS_INLINE
 %ignore WS
 %ignore SINGLE_LINE_COMMENT
